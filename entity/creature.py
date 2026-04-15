@@ -41,3 +41,19 @@ class Creature:
         Your current hunger level is {self.hunger}
         """
         return prompt
+
+    def age_one_day(self):
+        now = datetime.now()
+        # if a day has passed since the creature was created, 
+        # age it and decrease needs. time will decay needs, actions will improve them
+        if now - self.created_at >= datetime.timedelta(days=1):
+            self.age += 1
+            self.energy -= 5
+            self.hunger -= 5
+            self.happiness -= 2
+
+    def feed(self):
+        self.hunger += 20
+        if self.hunger > 100:
+            self.hunger = 100
+        self.last_interaction = datetime.now()

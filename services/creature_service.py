@@ -1,0 +1,1 @@
+# Service layer for managing creature-related operations
