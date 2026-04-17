@@ -83,6 +83,23 @@ class Creature:
             self.fullness = 100
         self.last_interaction = datetime.now()
 
+    def beg_for_food(self):
+        if self.fullness < 5:
+            return {
+                "success": True,
+                "message": "Very hungry, beg for food."
+            }
+        elif self.fullness == 100:
+            return {
+                "success": False,
+                "message": "Have a full stomach, no need to beg for food right now."
+            }
+        else: 
+            return {
+                "success": False,
+                "message": "Not hungry enough to beg for food yet."
+            }
+
     def play(self):
         self.happiness += 20
         if self.happiness > 100:
@@ -90,6 +107,9 @@ class Creature:
         self.energy -= 10
         if self.energy < 0:
             self.energy = 0
+        self.fullness -= 5
+        if self.fullness < 0:
+            self.fullness = 0
         self.last_interaction = datetime.now()
 
     def teach_trick(self):
@@ -114,3 +134,4 @@ class Creature:
             "success": True,
             "message": f"Learned a new trick: {new_trick}"
         }
+
