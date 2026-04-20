@@ -1,4 +1,4 @@
-from services.service_layer import create_or_load_creature, create_and_save_creature
+from services.startup import create_or_load_creature, create_and_save_creature
 
 # fairly simple CLI for interacting with the creature. The llm will have some agency
 # reducing the amount of input needed from the user from a code perspective, but the user will still have a lot of freedom  

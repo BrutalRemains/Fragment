@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 from enum import Enum
 
+from services.prompt_builder import render_creature_prompt
+
 # simple enum for any switching on the state of the creature, 
 # emotionally or "physically" so to speak
 class CreatureState(Enum):
@@ -46,24 +48,43 @@ class Creature:
         else:
             return CreatureState.ANGRY
 
-    # this tells the language model what it needs to know to "stay in character"
-    def initial_prompt(self):
+    # this tells the language model what it needs to know to "stay in character".
+    def prompt_context(self):
         mood = self.calculate_mood()
-        prompt = f""" 
-        You are a {self.species}
-        Your name is {self.name}
-        You are currently {self.age} days old
-        
-        Current Status:
-        Your current mood is {mood.value}
-        Your current energy level is {self.energy}
-        Your current fullness level is {self.fullness}
-        Your current happiness level is {self.happiness}
+        return {
+            "species": self.species,
+            "name": self.name,
+            "age": self.age,
+            "mood": mood.value,
+            "energy": self.energy,
+            "fullness": self.fullness,
+            "happiness": self.happiness,
+            "recent_memories": ", ".join(self.memory[-3:]) if self.memory else "none yet",
+            "known_tricks": ", ".join(self.known_tricks) if self.known_tricks else "none yet",
+        }
 
-        Recent memories: {', '.join(self.memory[-3:]) if self.memory else 'none yet'}
-        Tricks you know: {', '.join(self.known_tricks) if self.known_tricks else 'none yet'}
-        """
-        return prompt
+    # the prompt is stored in a text file using the dict returned from prompt_context to fill in the necessary information. 
+    # allows for easy editing of the prompt without changing the code
+    def initial_prompt(self):
+        return render_creature_prompt(self.prompt_context())
+
+    # def initial_prompt(self):
+    #     mood = self.calculate_mood()
+    #     prompt = f""" 
+    #     You are a {self.species}
+    #     Your name is {self.name}
+    #     You are currently {self.age} days old
+        
+    #     Current Status:
+    #     Your current mood is {mood.value}
+    #     Your current energy level is {self.energy}
+    #     Your current fullness level is {self.fullness}
+    #     Your current happiness level is {self.happiness}
+
+    #     Recent memories: {', '.join(self.memory[-3:]) if self.memory else 'none yet'}
+    #     Tricks you know: {', '.join(self.known_tricks) if self.known_tricks else 'none yet'}
+    #     """
+    #     return prompt
 
     def age_one_day(self):
         # adjust all values based on the time passed since the last decay check, this allows for real-time aging and decay of needs
