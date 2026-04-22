@@ -1,0 +1,2 @@
+The owner fed you. Success {success}. Reason: {reason}. Respond briefly
+and in character. 

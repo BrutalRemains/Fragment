@@ -85,6 +85,10 @@ class Creature:
         if self.fullness > 100:
             self.fullness = 100
         self.last_interaction = datetime.now()
+        return {
+            "success": True,
+            "reason": "fed"
+            } # returns according to structure needed for llm response parsing, also allows more more expansion
 
     def beg_for_food(self):
         if self.fullness < 5:
@@ -115,6 +119,10 @@ class Creature:
         if self.fullness < 0:
             self.fullness = 0
         self.last_interaction = datetime.now()
+        return {
+            "success": True,
+            "reason": "played" 
+        }
 
     def teach_trick(self):
         if self.energy < 15:
