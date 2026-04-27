@@ -2,7 +2,3 @@ The owner fed you.
 Success: {success} 
 Reason: {reason}
 
-Reply as the creature in one short sentence.
-Do not repeat the prompt.
-Do not include labels, hashtags, metadata, or quotes.
-Only output the creature's spoken response.

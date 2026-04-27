@@ -1,13 +1,15 @@
 from data.database import save_creature
 from services.action import apply_user_input
-from services.prompt_builder import render_action_prompt
+from services.prompt_builder import render_action_prompt, render_creature_prompt
 from services.qwenllm import get_llm
 
 def generate_reply(creature, user_input):
     result = apply_user_input(creature, user_input)
-    
-    prompt = render_action_prompt(
-        context=creature.prompt_context(),
+    context = creature.prompt_context()
+
+    system_text = render_creature_prompt(context)
+    action_text = render_action_prompt(
+        context=context,
         intent=result["intent"],
         action_result=result["action_result"],
         user_text=result["user_text_for_llm"],
@@ -16,7 +18,8 @@ def generate_reply(creature, user_input):
     llm = get_llm()
     output = llm.create_chat_completion(
         messages= [
-            {"role": "user", "content": prompt}
+            {"role": "system", "content": system_text},
+            {"role": "user", "content": action_text}
         ], 
         max_tokens=120, 
         temperature=0.7, 
