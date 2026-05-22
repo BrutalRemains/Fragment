@@ -1,0 +1,22 @@
+import unittest
+from services import generate_reply
+
+class TestGenerateReply(unittest.TestCase):
+    def make_creature():
+        return {
+            "name": "Testy",
+            "species": "TestSpecies",
+            "age": 2,
+            "energy": 80,
+            "fullness": 90,
+            "happiness": 85,
+            "memory": [],
+            "known_tricks": [],
+        }
+
+    def test_generate_reply(self):
+        creature = TestGenerateReply.make_creature()
+        user_input = "How are you feeling today?"
+        response = generate_reply(creature, user_input)
+        self.assertIsInstance(response, str)
+        self.assertTrue(len(response) > 0)

@@ -16,6 +16,7 @@ def user_manual():
     print("- You can ask your creature about its feelings, memories, or tricks it knows.")
     print("- You may also give your creature commands. Refer to the command section for specific commands")
     print("")  
+
 # to keep everything modular and clean, there is almost no actual logic here
 def chat():  
     load_creature_data = create_or_load_creature()
@@ -53,6 +54,10 @@ def chat():
             print("You are now chatting with your creature. Type 'b' to go back to the menu.")
             while True:
                 user_input = input("You: ")
+                if not user_input:
+                    # handle empty input before sending the message to the llm
+                    print("Please enter a message to interact with your creature.")
+                    continue
                 if user_input.strip().lower() == "b":
                     break
                 response = generate_reply(creature, user_input)
