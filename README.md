@@ -20,7 +20,10 @@ As you interact with the pet, prompts are being sent behind the scenes to the ll
 
 ### Package:
     Windows: 
-    Linux:
+    Linux: 
+        1. Extract the archive
+        2. Open a terminal in the extracted archive
+        3. Run the executable: ./neural-pet-cli
 
 ### Source Code:
 
@@ -57,7 +60,7 @@ There are a few known limitations and obstacles:
 
 
 ## Roadmap
-- Linux and Windows packages
+- Windows cli packages
 
 - Web application implementation
 

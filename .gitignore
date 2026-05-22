@@ -8,10 +8,12 @@ wheels/
 model/*
 *.gguf
 uv.lock
+*.spec
 
 # Virtual environments
 .venv
 
 # personal runtime files
+*.db
 data/creature.db
 todo.txt
