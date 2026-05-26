@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from data.database import load_creature, save_creature
 from services.generate_reply import generate_reply
+from services.startup import create_or_load_creature
 
 app = FastAPI()
 
@@ -26,8 +27,12 @@ def create_creature(creature_id: int, name: str, description: str):
     return {"message": "Creature saved successfully", "creature_id": creature_id}
 
 @app.post("/chat")
-def chat(user_input):
-    creature = load_creature()  # Load creature data from the database
+def chat(payload: dict):
+    user_input = payload.get("message", "")
+    if not user_input:
+        return {"success": False}
+    
+    creature = create_or_load_creature()  # Load creature data from the database
     response = generate_reply(creature, user_input)  # Generate response based on user input and creature data
     save_creature(creature)  # Save updated creature data back to the database
     return {
@@ -42,21 +47,21 @@ def chat(user_input):
 # all of our creature methods are set up to return appropriate responses
 @app.post("/feed")
 def feed():
-    creature = load_creature()
+    creature = create_or_load_creature()
     result = creature.feed()
     save_creature(creature)
     return result
 
 @app.post("/play")
 def play():
-    creature = load_creature()
+    creature = create_or_load_creature()
     result = creature.play()
     save_creature(creature)
     return result
 
 @app.post("/rest")
 def rest():
-    creature = load_creature()
+    creature = create_or_load_creature()
     result = creature.rest()
     save_creature(creature)
     return result
