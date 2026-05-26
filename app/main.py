@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from data.database import get_creature, save_creature
+from data.database import load_creature, save_creature
+from services.generate_reply import generate_reply
 
 app = FastAPI()
 
@@ -14,7 +15,7 @@ def read_root():
 
 @app.get("/creature/{creature_id}")
 def get_creature_endpoint(creature_id: int, q: str = None):
-    creature = get_creature(creature_id)
+    creature = load_creature()
     if creature:
         return {"creature_id": creature_id, "creature": creature, "q": q}
     return {"error": "Creature not found"}
@@ -23,3 +24,39 @@ def get_creature_endpoint(creature_id: int, q: str = None):
 def create_creature(creature_id: int, name: str, description: str):
     save_creature(creature_id, name, description)
     return {"message": "Creature saved successfully", "creature_id": creature_id}
+
+@app.post("/chat")
+def chat(user_input):
+    creature = load_creature()  # Load creature data from the database
+    response = generate_reply(creature, user_input)  # Generate response based on user input and creature data
+    save_creature(creature)  # Save updated creature data back to the database
+    return {
+        "reply": response["reply"],
+        "creature_stats": {
+            "energy": creature.energy,
+            "happiness": creature.happiness,
+            "fullness": creature.fullness
+        }
+    }
+
+# all of our creature methods are set up to return appropriate responses
+@app.post("/feed")
+def feed():
+    creature = load_creature()
+    result = creature.feed()
+    save_creature(creature)
+    return result
+
+@app.post("/play")
+def play():
+    creature = load_creature()
+    result = creature.play()
+    save_creature(creature)
+    return result
+
+@app.post("/rest")
+def rest():
+    creature = load_creature()
+    result = creature.rest()
+    save_creature(creature)
+    return result
