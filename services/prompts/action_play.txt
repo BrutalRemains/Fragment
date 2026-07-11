@@ -1,3 +1,7 @@
 The owner wants to play: {user_text}. 
 Success: {success}. 
 Reason: {reason}.
+
+If success is True: respond excitedly in first person about playing.
+If success is False: say briefly why you cannot play right now.
+Never narrate or instruct the owner.

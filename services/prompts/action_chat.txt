@@ -1,6 +1,6 @@
 The owner said: "{user_text}"
 
-Respond directly to what the owner said.
+Respond directly to what the owner said, as {name} in first person.
 
 Success: {success}
 Reason: {reason}

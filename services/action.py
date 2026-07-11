@@ -53,7 +53,7 @@ def local_intent_parse(text, known_tricks):
         return {"intent": "rest", "confidence": 0.9}
     if any(p in t for p in ["teach", "learn trick", "new trick"]):
         return {"intent": "teach", "confidence": 0.85}
-    if any(p in t for p in [trick,"perform", "do a trick", "show off"]):
+    if any(p in t for p in ["trick","perform", "do a trick", "show off"]):
         return {"intent": "perform", "confidence": 0.8}
     if "status" in t:
         return {"intent": "status", "confidence": 0.95}

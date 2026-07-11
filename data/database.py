@@ -1,10 +1,12 @@
 import json
 import sqlite3
 import os
+from data.migrations import MIGRATIONS
 from entity.creature import Creature
 from datetime import datetime
 
 DB_PATH = './data/creature.db'
+
 
 # connects to db or creates it if it doesn't exist
 def get_connection():
@@ -14,23 +16,16 @@ def get_connection():
 def initialize_db():
     conn = get_connection()
     cursor = conn.cursor()
+
+    current_version = cursor.execute("PRAGMA user_version").fetchone()[0]
+    target_version = len(MIGRATIONS)
     # create table if it doesn't exist, uses only 1d 1 because there will only ever be 1 creature
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS creature (
-            id INTEGER PRIMARY KEY CHECK (id = 1), 
-            name TEXT NOT NULL,
-            species TEXT NOT NULL,
-            age INTEGER NOT NULL DEFAULT 0,
-            energy INTEGER NOT NULL DEFAULT 100,
-            fullness INTEGER NOT NULL DEFAULT 100,
-            happiness INTEGER NOT NULL DEFAULT 100,
-            memory_json TEXT NOT NULL DEFAULT '[]',
-            known_tricks_json TEXT NOT NULL DEFAULT '[]',
-            created_at TEXT NOT NULL,
-            last_interaction TEXT NOT NULL,
-            last_decay_check TEXT NOT NULL
-        )
-    ''')
+    while current_version < target_version:
+        MIGRATIONS[current_version](cursor)
+        current_version += 1
+        cursor.execute(f"PRAGMA user_version = {current_version}")
+    
+    
     conn.commit()
     conn.close()
 
